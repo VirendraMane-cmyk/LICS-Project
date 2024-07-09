@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>chan Failed;
+chan SigningIn;
+chan SignedIn;
+broadcast chan GoldC;
+broadcast chan PlatinumC;
+int x = 0;
+int y = 0;
+const int maxAttempts = 5;
+bool buyGold;
+bool buyPlatinum;
+chan CallBank;
+chan OptionBuy;
+chan Success;
+chan OptionView;
+chan CreditCard;
+chan DebitCard;
+int PlatinumPrice = 1000;
+bool success;
+int GoldPrice = 500;
+chan SendMoney;
+
+int BankBalance = 100;
+</declaration>
+	<template>
+		<name x="5" y="5">User</name>
+		<declaration>// Place local declarations here.
+int UserBalance;
+</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-34">Start</name>
+		</location>
+		<location id="id1" x="263" y="0">
+			<name x="253" y="-34">SigningInUser</name>
+		</location>
+		<location id="id2" x="263" y="153">
+			<name x="253" y="119">Authenticated</name>
+		</location>
+		<location id="id3" x="0" y="153">
+			<name x="8" y="136">BuyMemberShip</name>
+		</location>
+		<location id="id4" x="0" y="263">
+			<name x="-10" y="229">ViewHistory</name>
+		</location>
+		<location id="id5" x="-204" y="153">
+			<name x="-214" y="119">Bank</name>
+		</location>
+		<location id="id6" x="-484" y="-136">
+			<name x="-494" y="-170">PaySuccess</name>
+		</location>
+		<location id="id7" x="-561" y="8">
+			<name x="-571" y="-26">PayFailure</name>
+		</location>
+		<location id="id8" x="-484" y="34">
+			<name x="-494" y="0">Credit</name>
+		</location>
+		<location id="id9" x="-450" y="187">
+			<name x="-460" y="153">Debit</name>
+		</location>
+		<location id="id10" x="-331" y="34">
+			<name x="-341" y="0">GoldBuy</name>
+		</location>
+		<location id="id11" x="-331" y="187">
+			<name x="-341" y="153">PlatinumBuy</name>
+		</location>
+		<location id="id12" x="-34" y="-255">
+			<name x="-44" y="-289">LogOut</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id13">
+			<source ref="id1"/>
+			<target ref="id12"/>
+			<label kind="guard" x="297" y="-153">x &gt;= 5</label>
+			<nail x="331" y="0"/>
+			<nail x="331" y="-255"/>
+		</transition>
+		<transition id="id14">
+			<source ref="id12"/>
+			<target ref="id0"/>
+			<nail x="-34" y="-297"/>
+			<nail x="-212" y="-297"/>
+			<nail x="-212" y="0"/>
+		</transition>
+		<transition id="id15">
+			<source ref="id6"/>
+			<target ref="id12"/>
+			<nail x="59" y="-136"/>
+			<nail x="59" y="-255"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id7"/>
+			<target ref="id12"/>
+			<nail x="-561" y="-102"/>
+			<nail x="-34" y="-102"/>
+		</transition>
+		<transition id="id17">
+			<source ref="id4"/>
+			<target ref="id12"/>
+			<nail x="-671" y="263"/>
+			<nail x="-671" y="-255"/>
+		</transition>
+		<transition id="id18">
+			<source ref="id11"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-432" y="85">CreditCard!</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id11"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-432" y="182">DebitCard!</label>
+		</transition>
+		<transition id="id20">
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-432" y="93">DebitCard!</label>
+		</transition>
+		<transition id="id21">
+			<source ref="id10"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-432" y="17">CreditCard!</label>
+			<nail x="-450" y="34"/>
+		</transition>
+		<transition id="id22">
+			<source ref="id5"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-313" y="170">PlatinumC!</label>
+			<label kind="assignment" x="-313" y="187">buyPlatinum = true</label>
+			<nail x="-204" y="187"/>
+		</transition>
+		<transition id="id23">
+			<source ref="id5"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-313" y="17">GoldC!</label>
+			<label kind="assignment" x="-313" y="34">buyGold = true</label>
+			<nail x="-204" y="34"/>
+		</transition>
+		<transition id="id24">
+			<source ref="id3"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-186" y="136">CallBank!</label>
+		</transition>
+		<transition id="id25">
+			<source ref="id9"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-611" y="195">success == true</label>
+			<nail x="-450" y="229"/>
+			<nail x="-629" y="229"/>
+			<nail x="-629" y="-204"/>
+			<nail x="-484" y="-204"/>
+		</transition>
+		<transition id="id26">
+			<source ref="id9"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-595" y="136">success == false</label>
+			<nail x="-561" y="187"/>
+		</transition>
+		<transition id="id27">
+			<source ref="id8"/>
+			<target ref="id6"/>
+		</transition>
+		<transition id="id28">
+			<source ref="id2"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="18" y="246">OptionView!</label>
+			<nail x="263" y="255"/>
+			<nail x="263" y="263"/>
+		</transition>
+		<transition id="id29">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="110" y="136">OptionBuy!</label>
+		</transition>
+		<transition id="id30">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="110" y="-110">x &lt; maxAttempts</label>
+			<label kind="synchronisation" x="18" y="-127">Failed!</label>
+			<label kind="assignment" x="18" y="-110">x = x + 1</label>
+			<nail x="263" y="-110"/>
+			<nail x="0" y="-110"/>
+		</transition>
+		<transition id="id31">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="263" y="51">SignedIn!</label>
+		</transition>
+		<transition id="id32">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="18" y="-17">SigningIn!</label>
+		</transition>
+	</template>
+	<template>
+		<name>Bank</name>
+		<declaration>void UpdateCheck(){
+    if(buyGold == true){
+        if(BankBalance &gt; GoldPrice){
+            BankBalance = BankBalance - GoldPrice;
+            success = true;
+        }
+        else{
+            success = false;
+        }
+    }
+    if(buyPlatinum == true){
+        if(BankBalance &gt; PlatinumPrice){
+            BankBalance = BankBalance - PlatinumPrice;
+            success = true;
+        }
+        else{
+            success = false;
+        }
+    }
+    
+
+}</declaration>
+		<location id="id33" x="-8" y="8">
+			<name x="-18" y="-26">Idle</name>
+		</location>
+		<location id="id34" x="221" y="8">
+			<name x="211" y="-26">MemberShip_Choice</name>
+		</location>
+		<location id="id35" x="391" y="-127">
+			<name x="381" y="-161">Gold</name>
+		</location>
+		<location id="id36" x="391" y="153">
+			<name x="381" y="119">Platinum</name>
+		</location>
+		<location id="id37" x="586" y="-127">
+			<name x="576" y="-161">Credit</name>
+		</location>
+		<location id="id38" x="620" y="51">
+			<name x="610" y="17">Debit</name>
+		</location>
+		<location id="id39" x="875" y="348">
+			<name x="865" y="314">Success</name>
+		</location>
+		<location id="id40" x="688" y="340">
+			<name x="678" y="306">Failure</name>
+		</location>
+		<location id="id41" x="875" y="51">
+			<name x="865" y="17">Check</name>
+		</location>
+		<init ref="id33"/>
+		<transition id="id42">
+			<source ref="id41"/>
+			<target ref="id40"/>
+			<label kind="guard" x="706" y="161">success == false</label>
+		</transition>
+		<transition id="id43">
+			<source ref="id41"/>
+			<target ref="id39"/>
+			<label kind="guard" x="875" y="165">success == true</label>
+		</transition>
+		<transition id="id44">
+			<source ref="id38"/>
+			<target ref="id41"/>
+			<label kind="assignment" x="638" y="51">UpdateCheck()</label>
+		</transition>
+		<transition id="id45">
+			<source ref="id37"/>
+			<target ref="id39"/>
+			<nail x="943" y="-127"/>
+			<nail x="943" y="348"/>
+		</transition>
+		<transition id="id46">
+			<source ref="id39"/>
+			<target ref="id33"/>
+			<nail x="875" y="433"/>
+			<nail x="-110" y="433"/>
+			<nail x="-110" y="8"/>
+		</transition>
+		<transition id="id47">
+			<source ref="id40"/>
+			<target ref="id33"/>
+			<nail x="-8" y="340"/>
+		</transition>
+		<transition id="id48">
+			<source ref="id36"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="409" y="221">DebitCard?</label>
+			<nail x="391" y="238"/>
+			<nail x="620" y="238"/>
+		</transition>
+		<transition id="id49">
+			<source ref="id35"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="409" y="34">DebitCard?</label>
+			<nail x="391" y="51"/>
+			<nail x="603" y="51"/>
+		</transition>
+		<transition id="id50">
+			<source ref="id35"/>
+			<target ref="id37"/>
+			<label kind="synchronisation" x="409" y="-144">CreditCard?</label>
+		</transition>
+		<transition id="id51">
+			<source ref="id36"/>
+			<target ref="id37"/>
+			<label kind="synchronisation" x="409" y="136">CreditCard?</label>
+			<nail x="535" y="153"/>
+			<nail x="535" y="-42"/>
+			<nail x="586" y="-42"/>
+		</transition>
+		<transition id="id52">
+			<source ref="id34"/>
+			<target ref="id36"/>
+			<label kind="synchronisation" x="239" y="136">PlatinumC?</label>
+			<nail x="221" y="153"/>
+		</transition>
+		<transition id="id53">
+			<source ref="id34"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="239" y="-144">GoldC?</label>
+			<nail x="221" y="-127"/>
+		</transition>
+		<transition id="id54">
+			<source ref="id33"/>
+			<target ref="id34"/>
+			<label kind="synchronisation" x="10" y="-9">CallBank?</label>
+		</transition>
+	</template>
+	<template>
+		<name>Library</name>
+		<location id="id55" x="0" y="0">
+			<name x="-10" y="-34">Idle</name>
+		</location>
+		<location id="id56" x="289" y="0">
+			<name x="279" y="-34">SignInRequested</name>
+		</location>
+		<location id="id57" x="289" y="161">
+			<name x="279" y="127">Authenicated</name>
+		</location>
+		<location id="id58" x="0" y="161">
+			<name x="-10" y="127">ShowBuy</name>
+		</location>
+		<location id="id59" x="289" y="340">
+			<name x="279" y="306">ShowHistory</name>
+		</location>
+		<location id="id60" x="-229" y="0">
+			<name x="-239" y="-34">LoggedOut</name>
+		</location>
+		<location id="id61" x="-229" y="161">
+			<name x="-239" y="127">Gold</name>
+		</location>
+		<location id="id62" x="-221" y="297">
+			<name x="-231" y="263">Platinum</name>
+		</location>
+		<init ref="id55"/>
+		<transition id="id63">
+			<source ref="id56"/>
+			<target ref="id60"/>
+			<label kind="guard" x="307" y="-34">y &gt;= maxAttempts</label>
+			<nail x="400" y="0"/>
+			<nail x="400" y="-136"/>
+			<nail x="-229" y="-136"/>
+		</transition>
+		<transition id="id64">
+			<source ref="id60"/>
+			<target ref="id55"/>
+			<nail x="-17" y="0"/>
+		</transition>
+		<transition id="id65">
+			<source ref="id61"/>
+			<target ref="id60"/>
+		</transition>
+		<transition id="id66">
+			<source ref="id62"/>
+			<target ref="id60"/>
+			<nail x="-331" y="297"/>
+			<nail x="-331" y="0"/>
+		</transition>
+		<transition id="id67">
+			<source ref="id58"/>
+			<target ref="id62"/>
+			<label kind="synchronisation" x="-203" y="280">PlatinumC?</label>
+			<nail x="0" y="297"/>
+		</transition>
+		<transition id="id68">
+			<source ref="id59"/>
+			<target ref="id60"/>
+			<nail x="0" y="340"/>
+			<nail x="-382" y="340"/>
+			<nail x="-382" y="-119"/>
+			<nail x="-229" y="-119"/>
+		</transition>
+		<transition id="id69">
+			<source ref="id58"/>
+			<target ref="id61"/>
+			<label kind="synchronisation" x="-211" y="144">GoldC?</label>
+		</transition>
+		<transition id="id70">
+			<source ref="id57"/>
+			<target ref="id59"/>
+			<label kind="synchronisation" x="195" y="255">OptionView?</label>
+			<nail x="289" y="272"/>
+		</transition>
+		<transition id="id71">
+			<source ref="id57"/>
+			<target ref="id58"/>
+			<label kind="synchronisation" x="102" y="144">OptionBuy?</label>
+		</transition>
+		<transition id="id72">
+			<source ref="id56"/>
+			<target ref="id55"/>
+			<label kind="guard" x="18" y="-136">y &lt; maxAttempts</label>
+			<label kind="synchronisation" x="10" y="-119">Failed?</label>
+			<label kind="assignment" x="18" y="-102">y = y + 1</label>
+			<nail x="289" y="-102"/>
+			<nail x="0" y="-102"/>
+		</transition>
+		<transition id="id73">
+			<source ref="id56"/>
+			<target ref="id57"/>
+			<label kind="synchronisation" x="280" y="67">SignedIn?</label>
+		</transition>
+		<transition id="id74">
+			<source ref="id55"/>
+			<target ref="id56"/>
+			<label kind="synchronisation" x="18" y="-13">SigningIn?</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Lib = Library();
+Person = User();
+Pay = Bank();
+// List one or more processes to be composed into a system.
+system Person,Lib,Pay;
+</system>
+	<queries>
+		<query>
+			<formula>A&lt;&gt;Person.LogOut
+</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2023-11-30 19:54:13 +0530">
+			</result>
+		</query>
+	</queries>
+</nta>
